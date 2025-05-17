@@ -10,24 +10,48 @@ const useSignup = () => {
         setError(null)
         setIsLoading(true)
 
-        const response = await fetch("api/users/signup", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({username, password, email})
-        })
+        try {
+            const res = await fetch("http://localhost:5000/api/users/signup", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                credentials: "include", // needed only if backend sets cookies
+                body: JSON.stringify({ username, password, email })
+            });
 
-        const json = await response.json()
+            const data = await res.json();
 
-        if (!response.ok) {
-            setIsLoading(false)
-            setError(json.error)
+            if (!res.ok) {
+                console.error("Signup failed:", data.error);
+                setIsLoading(false)
+                setError(json.error)
+            } else {
+                console.log("Signup success:", data);
+                localStorage.setItem("user", JSON.stringify(data))
+                dispatch({type: "LOGIN", payload: json})
+                setIsLoading(false)
+            }
+        } catch (err) {
+            console.error("Network or server error:", err);
         }
 
-        if (response.ok) {
-            localStorage.setItem("user", JSON.stringify(json))
-            dispatch({type: "LOGIN", payload: json})
-            setIsLoading(false)
-        }
+        // const response = await fetch("api/users/signup", {
+        //     method: "POST",
+        //     headers: {"Content-Type": "application/json"},
+        //     body: JSON.stringify({username, password, email})
+        // })
+
+        // const json = await response.json()
+
+        // if (!response.ok) {
+        //     setIsLoading(false)
+        //     setError(json.error)
+        // }
+
+        // if (response.ok) {
+        //     localStorage.setItem("user", JSON.stringify(json))
+        //     dispatch({type: "LOGIN", payload: json})
+        //     setIsLoading(false)
+        // }
     }
 
     return {signup, isLoading, error}

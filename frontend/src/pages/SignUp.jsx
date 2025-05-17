@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import logo from '../assets/images/Logo&Title.png'
 import Footer from "../components/Footer";
 import useSignUp from "../hooks/useSignup"
@@ -9,6 +9,7 @@ const createCritic = () => {
     const [password, setPassword] = useState("")
     const [email, setEmail] = useState("")
     const {signup, isLoading, error} = useSignUp()
+    const navigate = useNavigate()
     
 
     const handleSubmit = async (e) => {
@@ -16,9 +17,41 @@ const createCritic = () => {
         
         
         console.log(username, password, email)
-        await signup(username, password, email)
+        const data = await signup(username, password, email)
+
+        console.log(data)
     }
-    const navigate = useNavigate()
+
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+
+    //     const username = "testuser";
+    //     const password = "StrongP@ss1!";
+    //     const email = "test@example.com";
+
+    //     try {
+    //         const res = await fetch("http://localhost:5000/api/users/signup", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json"
+    //         },
+    //         credentials: "include", // needed only if backend sets cookies
+    //         body: JSON.stringify({ username, password, email })
+    //         });
+
+    //         const data = await res.json();
+
+    //         if (!res.ok) {
+    //         console.error("Signup failed:", data.error);
+    //         } else {
+    //         console.log("Signup success:", data);
+    //         }
+    //     } catch (err) {
+    //         console.error("Network or server error:", err);
+    //     }
+    // };
+
+
   return (
     <div className='bg-[#2B2B2B] text-[#464646] h-screen flex flex-col items-center pt-20'>
         <div className='bg-[#212121] flex flex-col pb-6 px-4 rounded-md'>
